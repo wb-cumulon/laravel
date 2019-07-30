@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class HomeController extends Controller
 {
@@ -35,17 +36,17 @@ class HomeController extends Controller
         if($request->isMethod('POST')){
             $this->validator($request);
         }
-        User::update([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => Hash::make($data['password']),
-        ])->where('id',auth::user()->id);
+        User::where('id',auth::user()->id)->update([
+            'name' => $request['name'],
+            'email' => $request['email'],
+            'password' => Hash::make($request['password']),
+        ]);
         return redirect('home');
     }
-    protected function validator(array $data)
+    protected function validator($request)
     {
         if($request->isMethod('POST')){
-            $this->validate($data, [
+            $this->validate($request, [
                 'name'         =>      'required', 'string', 'max:255','unique:users',
                 'email'       =>      'required', 'string', 'email', 'max:255', 'unique:users',
                 'password'       =>      'required', 'string', 'min:8', 'confirmed',
