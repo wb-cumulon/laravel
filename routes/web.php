@@ -14,3 +14,9 @@
 Route::get('/', function () {
     return view('welcome');
 });
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/editindex', 'HomeController@editIndex')->name('editindex');
+Route::post('/edituser', 'HomeController@editUser')->name('edituser');
